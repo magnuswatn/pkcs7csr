@@ -2,7 +2,7 @@ pkcs7csr
 =====
 A Python module for creating Microsoft style "PKCS #7 renewal request" for use with Active Directory Certificate Services.
 
-This allows non-IIS web servers to automatically renew their certificates from an ACDS server.
+This allows non-IIS web servers to automatically renew their certificates from an ADCS server.
 
 ## About PKCS #7 renewal requests
 The point of a PKCS#7 renewal request is that you prove that you possess an existing valid certificate, and therefore is authorized to get a new one with the same subject.
