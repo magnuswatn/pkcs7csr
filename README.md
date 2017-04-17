@@ -36,10 +36,10 @@ with open('/etc/pki/tls/private/my_adcs_key.pem', 'r') as open_file:
     )
 
 # Create an PKCS #7 renewal request
-pkcs7csr = pkcs7csr.create_pkcs7csr(cert, key)
+csr = pkcs7csr.create_pkcs7csr(cert, key)
 
 # Submit to the CA server using certsrv
-pem_cert = certsrv.get_cert('my-adcs-server.example.net', pkcs7csr, 'myTemplate', 'myUser', 'myPassword')
+pem_cert = certsrv.get_cert('my-adcs-server.example.net', csr, 'myTemplate', 'myUser', 'myPassword')
 
 # Write the new cert to the file
 with open('/etc/pki/tls/certs/my_adcs_cert.pem', 'w') as open_file:
