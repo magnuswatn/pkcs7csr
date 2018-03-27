@@ -5,7 +5,7 @@ Creates a Microsoft style "PKCS #7 renewal request"
 
 https://github.com/magnuswatn/pkcs7csr
 
-Magnus Watn <magnus@watn.no
+Magnus Watn <magnus@watn.no>
 """
 
 import base64
@@ -19,6 +19,8 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.asymmetric import padding
+
+__version__ = '1.0.1'
 
 class UnsupportedKeyTypeError(Exception):
     """Signifies that the key was of an unsupported type"""
