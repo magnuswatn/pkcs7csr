@@ -20,7 +20,7 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives.asymmetric import padding
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 class UnsupportedKeyTypeError(Exception):
     """Signifies that the key was of an unsupported type"""

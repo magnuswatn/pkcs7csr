@@ -44,8 +44,8 @@ Renew a certificate, using pkcs7csr and `certsrv <https://github.com/magnuswatn/
 
 .. code-block:: python
 
-    import certsrv
     import pkcs7csr
+    from certsrv import Certsrv
     from cryptography import x509
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import serialization
@@ -65,7 +65,8 @@ Renew a certificate, using pkcs7csr and `certsrv <https://github.com/magnuswatn/
     csr = pkcs7csr.create_pkcs7csr(cert, key)
 
     # Submit to the CA server using certsrv
-    pem_cert = certsrv.get_cert('my-adcs-server.example.net', csr, 'myTemplate', 'myUser', 'myPassword')
+    certsrv = Certsrv('my-adcs-server.example.net', 'myUser', 'myPassword')
+    pem_cert = certsrv.get_cert(csr, 'myTemplate')
 
     # Write the new cert to the file
     with open('/etc/pki/tls/certs/my_adcs_cert.pem', 'w') as open_file:
