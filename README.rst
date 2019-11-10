@@ -10,6 +10,9 @@ pkcs7csr
 .. image:: https://badge.fury.io/py/pkcs7csr.svg
     :target: https://badge.fury.io/py/pkcs7csr
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+
 Python module for creating Microsoft style "PKCS #7 renewal request" for use with Active Directory Certificate Services.
 
 This allows non-IIS web servers to automatically renew their certificates from an ADCS server.

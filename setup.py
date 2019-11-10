@@ -15,7 +15,7 @@ def read_file(filename, encoding='utf8'):
 here = os.path.abspath(os.path.dirname(__file__))
 
 module = read_file(os.path.join(here, 'pkcs7csr.py'))
-meta = dict(re.findall(r"""__([a-z]+)__ = '([^']+)""", module))
+meta = dict(re.findall(r"""__([a-z]+)__ = "([^"]+)""", module))
 
 readme = read_file(os.path.join(here, 'README.rst'))
 version = meta['version']
