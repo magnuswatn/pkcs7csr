@@ -6,6 +6,7 @@ import subprocess
 
 import pkcs7csr
 
+import pytest
 from pyasn1_modules import rfc2314
 from pyasn1.codec.der import encoder, decoder
 
@@ -218,3 +219,7 @@ class Pkcs7csrTestCase(unittest.TestCase):
             new_key.public_key().public_bytes(Encoding.DER, PublicFormat.SubjectPublicKeyInfo),
             inner_csr.public_key().public_bytes(Encoding.DER, PublicFormat.SubjectPublicKeyInfo))
         self.assertEqual(cert.public_bytes(Encoding.DER), encoded_inner_csr)
+
+    def test_unsupported_key_type(self):
+        with pytest.raises(pkcs7csr.UnsupportedKeyTypeError):
+            pkcs7csr._sign("not a key", b"payload")

@@ -100,7 +100,7 @@ def _sign(key, payload):
         signature_algorithm.setComponentByName("algorithm", (1, 2, 840, 10045, 4, 3, 2))
         signature = key.sign(payload, ec.ECDSA(hashes.SHA256()))
     else:
-        raise UnsupportedKeyTypeError
+        raise UnsupportedKeyTypeError()
 
     return signature, signature_algorithm
 
