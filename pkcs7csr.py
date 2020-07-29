@@ -11,14 +11,10 @@ Magnus Watn <magnus@watn.no>
 import base64
 import binascii
 
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
+from pyasn1.codec.der import decoder, encoder
 from pyasn1_modules import rfc2314, rfc2315
-from pyasn1.codec.der import encoder, decoder
-
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.asymmetric import padding
 
 __version__ = "1.0.2"
 

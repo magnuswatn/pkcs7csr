@@ -1,23 +1,20 @@
 """Tests for the pkcs7csr package"""
-import os
-import unittest
 import datetime
+import os
 import subprocess
-
-import pkcs7csr
+import unittest
 
 import pytest
-from pyasn1_modules import rfc2314
-from pyasn1.codec.der import encoder, decoder
-
 from cryptography import x509
-from cryptography.x509.oid import NameOID
-from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.serialization import Encoding
-from cryptography.hazmat.primitives.serialization import PublicFormat
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec, rsa
+from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+from cryptography.x509.oid import NameOID
+from pyasn1.codec.der import decoder, encoder
+from pyasn1_modules import rfc2314
+
+import pkcs7csr
 
 
 def _generate_self_signed_cert(key_type):
