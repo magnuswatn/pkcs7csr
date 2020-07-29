@@ -1,10 +1,10 @@
 pkcs7csr
 ========
 
-.. image:: https://travis-ci.org/magnuswatn/pkcs7csr.svg?branch=master
+.. image:: https://travis-ci.org/magnuswatn/pkcs7csr.svg?branch=main
     :target: https://travis-ci.org/magnuswatn/pkcs7csr
 
-.. image:: https://codecov.io/gh/magnuswatn/pkcs7csr/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/magnuswatn/pkcs7csr/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/magnuswatn/pkcs7csr
 
 .. image:: https://badge.fury.io/py/pkcs7csr.svg
@@ -64,7 +64,7 @@ Renew a certificate, using pkcs7csr and `certsrv <https://github.com/magnuswatn/
             backend=default_backend()
         )
 
-    # Create an PKCS #7 renewal request
+    # Create a PKCS #7 renewal request
     csr = pkcs7csr.create_pkcs7csr(cert, key)
 
     # Submit to the CA server using certsrv
