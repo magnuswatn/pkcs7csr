@@ -51,10 +51,10 @@ Renew a certificate, using pkcs7csr and `certsrv <https://github.com/magnuswatn/
     from cryptography.hazmat.primitives import serialization
 
     # Read the certificate and key from file
-    with open('/etc/pki/tls/certs/my_adcs_cert.pem', 'r') as open_file:
+    with open('/etc/pki/tls/certs/my_adcs_cert.pem', 'rb') as open_file:
         cert = x509.load_pem_x509_certificate(open_file.read(), default_backend())
 
-    with open('/etc/pki/tls/private/my_adcs_key.pem', 'r') as open_file:
+    with open('/etc/pki/tls/private/my_adcs_key.pem', 'rb') as open_file:
         key = serialization.load_pem_private_key(
             open_file.read(),
             password=None,
@@ -69,7 +69,7 @@ Renew a certificate, using pkcs7csr and `certsrv <https://github.com/magnuswatn/
     pem_cert = certsrv.get_cert(csr, 'myTemplate')
 
     # Write the new cert to the file
-    with open('/etc/pki/tls/certs/my_adcs_cert.pem', 'w') as open_file:
+    with open('/etc/pki/tls/certs/my_adcs_cert.pem', 'wb') as open_file:
         open_file.write(pem_cert)
 
     # Reload apache or whatever here
