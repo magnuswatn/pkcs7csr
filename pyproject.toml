@@ -52,7 +52,7 @@ path = "pkcs7csr.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "/pkcs7csr",
+    "/pkcs7csr.py",
 ]
 
 [tool.hatch.envs.default]
