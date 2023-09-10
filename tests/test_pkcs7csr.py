@@ -6,7 +6,6 @@ import unittest
 
 import pytest
 from cryptography import x509
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec, rsa
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
@@ -20,11 +19,9 @@ import pkcs7csr
 def _generate_self_signed_cert(key_type):
     """Generates a self signed certificate"""
     if key_type == "rsa":
-        key = rsa.generate_private_key(
-            public_exponent=65537, key_size=2048, backend=default_backend()
-        )
+        key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
     elif key_type == "ecdsa":
-        key = ec.generate_private_key(ec.SECP256R1(), default_backend())
+        key = ec.generate_private_key(ec.SECP256R1())
     else:
         raise Exception("what")
 
@@ -51,7 +48,7 @@ def _generate_self_signed_cert(key_type):
             x509.SubjectAlternativeName([x509.DNSName("testulf")]),
             critical=False,
         )
-        .sign(key, hashes.SHA256(), default_backend())
+        .sign(key, hashes.SHA256())
     )
 
     return cert, key
@@ -100,7 +97,7 @@ class Pkcs7csrTestCase(unittest.TestCase):
 
         verify_result, raw_inner_csr = _verify_pkcs7_signature(csr)
 
-        inner_csr = x509.load_der_x509_csr(raw_inner_csr, default_backend())
+        inner_csr = x509.load_der_x509_csr(raw_inner_csr)
 
         decoded_inner_csr = decoder.decode(
             raw_inner_csr, asn1Spec=rfc2314.CertificationRequest()
@@ -128,7 +125,7 @@ class Pkcs7csrTestCase(unittest.TestCase):
 
         verify_result, raw_inner_csr = _verify_pkcs7_signature(csr)
 
-        inner_csr = x509.load_der_x509_csr(raw_inner_csr, default_backend())
+        inner_csr = x509.load_der_x509_csr(raw_inner_csr)
 
         decoded_inner_csr = decoder.decode(
             raw_inner_csr, asn1Spec=rfc2314.CertificationRequest()
@@ -152,14 +149,12 @@ class Pkcs7csrTestCase(unittest.TestCase):
     def test_rsa_cert_new_key(self):
         """Generates a PKCS#7 renewal request from an rsa certificate with a new key"""
         cert, key = _generate_self_signed_cert("rsa")
-        new_key = rsa.generate_private_key(
-            public_exponent=65537, key_size=2048, backend=default_backend()
-        )
+        new_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
 
         verify_result, raw_inner_csr = _verify_pkcs7_signature(csr)
 
-        inner_csr = x509.load_der_x509_csr(raw_inner_csr, default_backend())
+        inner_csr = x509.load_der_x509_csr(raw_inner_csr)
 
         decoded_inner_csr = decoder.decode(
             raw_inner_csr, asn1Spec=rfc2314.CertificationRequest()
@@ -183,12 +178,12 @@ class Pkcs7csrTestCase(unittest.TestCase):
     def test_ecdsa_cert_new_key(self):
         """Generates a PKCS#7 renewal request from an ecdsa certificate with a new key"""
         cert, key = _generate_self_signed_cert("ecdsa")
-        new_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
+        new_key = ec.generate_private_key(ec.SECP256R1())
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
 
         verify_result, raw_inner_csr = _verify_pkcs7_signature(csr)
 
-        inner_csr = x509.load_der_x509_csr(raw_inner_csr, default_backend())
+        inner_csr = x509.load_der_x509_csr(raw_inner_csr)
 
         decoded_inner_csr = decoder.decode(
             raw_inner_csr, asn1Spec=rfc2314.CertificationRequest()
@@ -212,12 +207,12 @@ class Pkcs7csrTestCase(unittest.TestCase):
     def test_rsa_cert_new_ecdsa_key(self):
         """Generates a PKCS#7 renewal request from an rsa certificate with a new ecdsa key"""
         cert, key = _generate_self_signed_cert("rsa")
-        new_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
+        new_key = ec.generate_private_key(ec.SECP256R1())
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
 
         verify_result, raw_inner_csr = _verify_pkcs7_signature(csr)
 
-        inner_csr = x509.load_der_x509_csr(raw_inner_csr, default_backend())
+        inner_csr = x509.load_der_x509_csr(raw_inner_csr)
 
         decoded_inner_csr = decoder.decode(
             raw_inner_csr, asn1Spec=rfc2314.CertificationRequest()
@@ -241,14 +236,12 @@ class Pkcs7csrTestCase(unittest.TestCase):
     def test_ecdsa_cert_new_rsa_key(self):
         """Generates a PKCS#7 renewal request from an ecdsa certificate with a new rsa key"""
         cert, key = _generate_self_signed_cert("ecdsa")
-        new_key = rsa.generate_private_key(
-            public_exponent=65537, key_size=2048, backend=default_backend()
-        )
+        new_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
 
         verify_result, raw_inner_csr = _verify_pkcs7_signature(csr)
 
-        inner_csr = x509.load_der_x509_csr(raw_inner_csr, default_backend())
+        inner_csr = x509.load_der_x509_csr(raw_inner_csr)
 
         decoded_inner_csr = decoder.decode(
             raw_inner_csr, asn1Spec=rfc2314.CertificationRequest()
