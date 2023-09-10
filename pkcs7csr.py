@@ -10,13 +10,17 @@ Magnus Watn <magnus@watn.no>
 
 import base64
 import binascii
+from typing import Optional, Tuple, Union
 
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
+from cryptography.x509 import Certificate
 from pyasn1.codec.der import decoder, encoder
 from pyasn1_modules import rfc2314, rfc2315
 
-__version__ = "1.0.2"
+__version__ = "1.0.3dev"
+
+Key = Union[ec.EllipticCurvePrivateKey, rsa.RSAPrivateKey]
 
 
 class UnsupportedKeyTypeError(Exception):
@@ -25,7 +29,7 @@ class UnsupportedKeyTypeError(Exception):
     pass
 
 
-def _create_csr(cert, private_key):
+def _create_csr(cert: tuple, private_key: Key) -> bytes:
     """Creates a CSR with the RENEWAL_CERTIFICATE extension"""
 
     subject_public_key_info = decoder.decode(
@@ -79,7 +83,7 @@ def _create_csr(cert, private_key):
     return encoder.encode(certification_request)
 
 
-def _sign(key, payload):
+def _sign(key: Key, payload: bytes) -> Tuple[bytes, rfc2314.AlgorithmIdentifier]:
     """Signs the payload with the specified key"""
 
     signature_algorithm = rfc2314.AlgorithmIdentifier()
@@ -101,7 +105,7 @@ def _sign(key, payload):
     return signature, signature_algorithm
 
 
-def _create_pkcs7(cert, csr, private_key):
+def _create_pkcs7(cert: tuple, csr: bytes, private_key: Key) -> bytes:
     """Creates the PKCS7 structure and signs it"""
 
     content_info = rfc2315.ContentInfo()
@@ -169,7 +173,7 @@ def _create_pkcs7(cert, csr, private_key):
     return encoder.encode(outer_content_info)
 
 
-def _pem_encode_csr(csr):
+def _pem_encode_csr(csr: bytes) -> str:
     """Encodes the CSR in PEM format"""
     b64_csr = base64.b64encode(csr).decode("ascii")
     b64rn_csr = "\r\n".join(
@@ -181,7 +185,11 @@ def _pem_encode_csr(csr):
     return pem_csr
 
 
-def create_pkcs7csr(cert, key, new_key=None):
+def create_pkcs7csr(
+    cert: Certificate,
+    key: Key,
+    new_key: Optional[Key] = None,
+) -> str:
     """
     Creates a Microsoft style "PKCS #7 renewal request"
 
