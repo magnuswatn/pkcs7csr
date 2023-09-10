@@ -1,7 +1,9 @@
 """Tests for the pkcs7csr package"""
 import datetime
-import os
+from pathlib import Path
 import subprocess
+from tempfile import TemporaryDirectory
+from typing import Literal, Tuple
 import unittest
 
 import pytest
@@ -16,7 +18,7 @@ from pyasn1_modules import rfc2314
 import pkcs7csr
 
 
-def _generate_self_signed_cert(key_type):
+def _generate_self_signed_cert(key_type: Literal["rsa", "ecdsa"]):
     """Generates a self signed certificate"""
     if key_type == "rsa":
         key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
@@ -54,44 +56,43 @@ def _generate_self_signed_cert(key_type):
     return cert, key
 
 
-def _verify_pkcs7_signature(pkcs7):
+def _verify_pkcs7_signature(pkcs7: str) -> Tuple[int, bytes]:
     """Verifies a PKCS7 file with OpenSSL"""
 
     # OpenSSL does not like the original PEM header
     pkcs7 = pkcs7.replace("NEW CERTIFICATE REQUEST", "PKCS7")
 
-    with open("./TEMP_csr", "w") as open_file:
-        open_file.write(pkcs7)
+    with TemporaryDirectory() as td:
+        csr_file = Path(td, "TEMP_csr")
+        inner_csr_file = Path(td, "TEMP_innercsr")
 
-    verify_result = subprocess.call(
-        [
-            "openssl",
-            "cms",
-            "-verify",
-            "-in",
-            "./TEMP_csr",
-            "-inform",
-            "PEM",
-            "-noverify",
-            "-out",
-            "./TEMP_innercsr",
-        ]
-    )
+        csr_file.write_text(pkcs7)
 
-    with open("./TEMP_innercsr", "rb") as open_file:
-        inner_csr = open_file.read()
+        verify_result = subprocess.call(
+            [
+                "openssl",
+                "cms",
+                "-verify",
+                "-in",
+                csr_file,
+                "-inform",
+                "PEM",
+                "-noverify",  # applies to the signer cert, not the signature
+                "-out",
+                inner_csr_file,
+            ]
+        )
 
-    os.remove("./TEMP_csr")
-    os.remove("./TEMP_innercsr")
+        inner_csr = inner_csr_file.read_bytes()
 
     return verify_result, inner_csr
 
 
-class Pkcs7csrTestCase(unittest.TestCase):
+class Pkcs7csrTest(unittest.TestCase):
     """Tests for pkcs7csr"""
 
     def test_rsa_cert(self):
-        """Generates a PKCS#7 renewal request from an rsa certificate"""
+        """Generates a PKCS#7 renewal request from a rsa certificate"""
         cert, key = _generate_self_signed_cert("rsa")
         csr = pkcs7csr.create_pkcs7csr(cert, key)
 
@@ -147,7 +148,7 @@ class Pkcs7csrTestCase(unittest.TestCase):
         self.assertEqual(cert.public_bytes(Encoding.DER), encoded_inner_csr)
 
     def test_rsa_cert_new_key(self):
-        """Generates a PKCS#7 renewal request from an rsa certificate with a new key"""
+        """Generates a PKCS#7 renewal request from a rsa certificate with a new key"""
         cert, key = _generate_self_signed_cert("rsa")
         new_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
@@ -176,7 +177,9 @@ class Pkcs7csrTestCase(unittest.TestCase):
         self.assertEqual(cert.public_bytes(Encoding.DER), encoded_inner_csr)
 
     def test_ecdsa_cert_new_key(self):
-        """Generates a PKCS#7 renewal request from an ecdsa certificate with a new key"""
+        """
+        Generates a PKCS#7 renewal request from an ecdsa certificate with a new key
+        """
         cert, key = _generate_self_signed_cert("ecdsa")
         new_key = ec.generate_private_key(ec.SECP256R1())
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
@@ -205,7 +208,9 @@ class Pkcs7csrTestCase(unittest.TestCase):
         self.assertEqual(cert.public_bytes(Encoding.DER), encoded_inner_csr)
 
     def test_rsa_cert_new_ecdsa_key(self):
-        """Generates a PKCS#7 renewal request from an rsa certificate with a new ecdsa key"""
+        """
+        Generates a PKCS#7 renewal request from a rsa certificate with a new ecdsa key
+        """
         cert, key = _generate_self_signed_cert("rsa")
         new_key = ec.generate_private_key(ec.SECP256R1())
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
@@ -234,7 +239,9 @@ class Pkcs7csrTestCase(unittest.TestCase):
         self.assertEqual(cert.public_bytes(Encoding.DER), encoded_inner_csr)
 
     def test_ecdsa_cert_new_rsa_key(self):
-        """Generates a PKCS#7 renewal request from an ecdsa certificate with a new rsa key"""
+        """
+        Generates a PKCS#7 renewal request from an ecdsa certificate with a new rsa key
+        """
         cert, key = _generate_self_signed_cert("ecdsa")
         new_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
         csr = pkcs7csr.create_pkcs7csr(cert, key, new_key)
