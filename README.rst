@@ -1,8 +1,8 @@
 pkcs7csr
 ========
 
-.. image:: https://travis-ci.org/magnuswatn/pkcs7csr.svg?branch=main
-    :target: https://travis-ci.org/magnuswatn/pkcs7csr
+.. image:: https://github.com/magnuswatn/pkcs7csr/workflows/CI/badge.svg?branch=main
+     :target: https://github.com/magnuswatn/pkcs7csr/actions?workflow=CI
 
 .. image:: https://codecov.io/gh/magnuswatn/pkcs7csr/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/magnuswatn/pkcs7csr
