@@ -1,10 +1,10 @@
 """Tests for the pkcs7csr package"""
 import datetime
-from pathlib import Path
 import subprocess
+import unittest
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Literal, Tuple
-import unittest
 
 import pytest
 from cryptography import x509
