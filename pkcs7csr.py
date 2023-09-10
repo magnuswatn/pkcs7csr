@@ -9,7 +9,6 @@ Magnus Watn <magnus@watn.no>
 """
 
 import base64
-import binascii
 from typing import Optional, Tuple, Union
 
 from cryptography.hazmat.primitives import hashes, serialization
@@ -69,9 +68,7 @@ def _create_csr(cert: tuple, private_key: Key) -> bytes:
         private_key, encoder.encode(certification_request_info)
     )
 
-    signature = rfc2314.univ.BitString(
-        hexValue=binascii.hexlify(raw_signature).decode("ascii")
-    )
+    signature = rfc2314.univ.BitString(hexValue=raw_signature.hex())
 
     certification_request = rfc2314.CertificationRequest()
     certification_request.setComponentByName(
@@ -119,9 +116,7 @@ def _create_pkcs7(cert: tuple, csr: bytes, private_key: Key) -> bytes:
     )
 
     raw_signature, _ = _sign(private_key, csr)
-    signature = rfc2314.univ.OctetString(
-        hexValue=binascii.hexlify(raw_signature).decode("ascii")
-    )
+    signature = rfc2314.univ.OctetString(value=raw_signature)
 
     # Microsoft adds parameters with ASN.1 NULL encoding here,
     # but according to rfc5754 they should be absent:
