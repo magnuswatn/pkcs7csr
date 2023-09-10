@@ -1,7 +1,7 @@
 """Tests for the pkcs7csr package"""
-import datetime
 import subprocess
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Literal, Tuple
@@ -44,8 +44,8 @@ def _generate_self_signed_cert(key_type: Literal["rsa", "ecdsa"]):
         .issuer_name(issuer)
         .public_key(key.public_key())
         .serial_number(x509.random_serial_number())
-        .not_valid_before(datetime.datetime.utcnow())
-        .not_valid_after(datetime.datetime.utcnow() + datetime.timedelta(days=10))
+        .not_valid_before(datetime.now(timezone.utc))
+        .not_valid_after(datetime.now(timezone.utc) + timedelta(days=10))
         .add_extension(
             x509.SubjectAlternativeName([x509.DNSName("testulf")]),
             critical=False,
