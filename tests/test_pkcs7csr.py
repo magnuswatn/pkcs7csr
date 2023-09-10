@@ -30,13 +30,13 @@ def _generate_self_signed_cert(key_type):
 
     subject = issuer = x509.Name(
         [
-            x509.NameAttribute(NameOID.COUNTRY_NAME, u"NO"),
+            x509.NameAttribute(NameOID.COUNTRY_NAME, "NO"),
             x509.NameAttribute(
-                NameOID.STATE_OR_PROVINCE_NAME, u"State or Province Name"
+                NameOID.STATE_OR_PROVINCE_NAME, "State or Province Name"
             ),
-            x509.NameAttribute(NameOID.LOCALITY_NAME, u"Locality name"),
-            x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Organization Name"),
-            x509.NameAttribute(NameOID.COMMON_NAME, u"commonName"),
+            x509.NameAttribute(NameOID.LOCALITY_NAME, "Locality name"),
+            x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Organization Name"),
+            x509.NameAttribute(NameOID.COMMON_NAME, "commonName"),
         ]
     )
     cert = (
@@ -48,7 +48,8 @@ def _generate_self_signed_cert(key_type):
         .not_valid_before(datetime.datetime.utcnow())
         .not_valid_after(datetime.datetime.utcnow() + datetime.timedelta(days=10))
         .add_extension(
-            x509.SubjectAlternativeName([x509.DNSName(u"testulf")]), critical=False,
+            x509.SubjectAlternativeName([x509.DNSName("testulf")]),
+            critical=False,
         )
         .sign(key, hashes.SHA256(), default_backend())
     )
